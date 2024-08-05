@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ProducTransaction;
+use App\Models\ProductTransaction;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class ProducTransactionController extends Controller
+class ProductTransactionController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -35,7 +35,7 @@ class ProducTransactionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(ProducTransaction $producTransaction)
+    public function show(ProductTransaction $productTransaction)
     {
         //
     }
@@ -43,7 +43,7 @@ class ProducTransactionController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ProducTransaction $producTransaction)
+    public function edit(ProductTransaction $productTransaction)
     {
         //
     }
@@ -51,7 +51,7 @@ class ProducTransactionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ProducTransaction $producTransaction)
+    public function update(Request $request, ProductTransaction $productTransaction)
     {
         //
     }
@@ -59,7 +59,7 @@ class ProducTransactionController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ProducTransaction $producTransaction)
+    public function destroy(ProductTransaction $productTransaction)
     {
         //
     }

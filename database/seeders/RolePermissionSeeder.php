@@ -17,10 +17,6 @@ class RolePermissionSeeder extends Seeder
             'name' => 'owner'
         ]);
 
-        $owner = Role::create([
-            'name' => 'buyer'
-        ]);
-
         $user = User::create([
             'name'=> 'Haikal Pramudya',
             'email'=> 'haikaltri266@gmail.com',
