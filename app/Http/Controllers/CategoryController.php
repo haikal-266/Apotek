@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Storage;
 use App\Models\Category;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -40,14 +41,26 @@ class CategoryController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255|unique:categories,name,' . $category->id,
-            'icon' => 'required|string|max:255',
+            'icon' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $category->update([
+        $data = [
             'name' => $request->name,
             'slug' => Str::slug($request->name),
-            'icon' => $request->icon,
-        ]);
+        ];
+
+        if ($request->hasFile('icon')) {
+            // Delete old icon
+            if ($category->icon) {
+                Storage::disk('public')->delete($category->icon);
+            }
+
+            // Store new icon
+            $iconPath = $request->file('icon')->store('categories', 'public');
+            $data['icon'] = $iconPath;
+        }
+
+        $category->update($data);
 
         return redirect()->route('admin.categories.index')->with('success', 'Category updated successfully.');
     }

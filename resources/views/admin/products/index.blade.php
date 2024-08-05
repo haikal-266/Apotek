@@ -1,4 +1,3 @@
-<!-- resources/views/admin/products/index.blade.php -->
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
@@ -54,13 +53,14 @@
 
                     <h3 class="text-lg font-medium mb-4">Products List</h3>
                     <div class="overflow-x-auto">
-                        <div x-data="{ showModal: false, imageSrc: '' }" class="overflow-x-auto">
+                        <div x-data="{ showModal: false, imageSrc: '', modalContent: '', modalType: '' }" class="overflow-x-auto">
                             <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                                 <thead class="bg-gray-50 dark:bg-gray-700">
                                     <tr>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Name</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Price</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Category</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">About</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Image</th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
                                     </tr>
@@ -78,10 +78,17 @@
                                                 {{ $product->category->name }}
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
-                                                <img src="{{ asset('storage/' . $product->photo) }}"
-                                                     alt="{{ $product->name }} icon"
-                                                     class="w-16 h-16 object-cover cursor-pointer rounded-full"
-                                                     @click="showModal = true; imageSrc = $event.target.src">
+                                                <span class="category-name cursor-pointer hover:text-blue-500"
+                                                      data-full-text="{{ $product->about }}"
+                                                      @click="showModal = true; modalContent = $event.target.getAttribute('data-full-text'); modalType = 'about'">
+                                                    {{ Str::limit($product->about, 50, '...') }}
+                                                </span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-300">
+                                               <img src="{{ asset('storage/' . $product->photo) }}"
+                                                    alt="{{ $product->name }} icon"
+                                                    class="w-16 h-16 object-cover cursor-pointer rounded-full"
+                                                    @click="showModal = true; imageSrc = $event.target.src; modalType = 'image'">
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                                 <a href="{{ route('admin.products.edit', $product) }}" class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300">Edit</a>
@@ -95,25 +102,29 @@
                                     @endforeach
                                 </tbody>
                             </table>
-
-                            <!-- Modal for full-size image -->
+                            <!-- Modal for full-size image and about text -->
                             <div x-show="showModal"
-                                 x-transition:enter="transition ease-out duration-300"
-                                 x-transition:enter-start="opacity-0"
-                                 x-transition:enter-end="opacity-100"
-                                 x-transition:leave="transition ease-in duration-200"
-                                 x-transition:leave-start="opacity-100"
-                                 x-transition:leave-end="opacity-0"
-                                 class="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50 flex items-center justify-center"
-                                 @click.self="showModal = false">
-                                <div class="relative bg-white dark:bg-gray-800 p-8 max-w-3xl max-h-[90vh] overflow-auto rounded-lg">
+                                x-transition:enter="transition ease-out duration-300"
+                                x-transition:enter-start="opacity-0"
+                                x-transition:enter-end="opacity-100"
+                                x-transition:leave="transition ease-in duration-200"
+                                x-transition:leave-start="opacity-100"
+                                x-transition:leave-end="opacity-0"
+                                class="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50 flex items-center justify-center"
+                                @click.self="showModal = false">
+                                <div class="relative bg-white dark:bg-gray-800 p-8 max-w-3xl max-h] overflow-auto rounded-lg">
                                     <button @click="showModal = false"
                                             class="absolute top-2 right-2 text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">
                                         <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                                         </svg>
                                     </button>
-                                    <img :src="imageSrc" alt="Full size product image" class="max-w-full max-h-[80vh] object-contain mx-auto">
+                                    <template x-if="modalType === 'image'">
+                                        <img :src="imageSrc" alt="Full size product image" class="max-w-full max-h-[80vh] object-contain mx-auto">
+                                    </template>
+                                    <template x-if="modalType === 'about'">
+                                        <p x-text="modalContent" class="text-gray-700 dark:text-gray-300"></p>
+                                    </template>
                                 </div>
                             </div>
                         </div>
@@ -123,3 +134,6 @@
         </div>
     </div>
 </x-app-layout>
+
+
+{{-- SCRIPT & CSS --}}
